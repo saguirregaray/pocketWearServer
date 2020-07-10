@@ -36,8 +36,11 @@ app.get('/', (req, res) => {
     res.json({ "message": "Mongo server app" });
 });
 
-// Require person routes
+// Require item routes
 require('./app/routes/item.routes.js')(app);
+
+// Require user routes
+require('./app/routes/user.routes.js')(app);
 
 //necessary with mongoose
 mongoose.Promise = global.Promise;
