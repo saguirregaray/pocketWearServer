@@ -42,6 +42,9 @@ require('./app/routes/item.routes.js')(app);
 // Require user routes
 require('./app/routes/user.routes.js')(app);
 
+// Require user inventory routes
+require('./app/routes/userInventory.routes.js')(app);
+
 //necessary with mongoose
 mongoose.Promise = global.Promise;
 
