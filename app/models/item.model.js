@@ -3,7 +3,8 @@ const mongoose = require('mongoose');
 const ItemSchema = mongoose.Schema({
     type: String,
     color: String,
-    season: String
+    season: String,
+    store: String
 }, {
     timestamps: true
 });

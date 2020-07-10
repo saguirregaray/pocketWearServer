@@ -36,6 +36,9 @@ module.exports = (app) => {
     // Retrieve all colors to filter
     app.get('/colors', item.findColors);                 //Done
 
+    // Retrieve all stores to filter
+    app.get('/stores', item.findStores);            //Done
+
     // Retrieve all types to filter
     app.get('/types', item.findTypes);                      //Done
 

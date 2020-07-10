@@ -16,15 +16,16 @@ exports.create = (req, res) => {
     const item = new Item({
         type: req.body.type,
         color: req.body.color,
-        season: req.body.season
+        season: req.body.season,
+        store: req.body.store
     });
 
     // Save item in  database
     item.save()
         .then(data => {
-            var imageBuffer = new Buffer(req.body.image, 'base64');
-            const query = 'INSERT INTO image_store (key, image) VALUES (?, ?)';
-            client.execute(query, [data.id, imageBuffer], { prepare: true }, function (err, result) {
+            //var imageBuffer = new Buffer(req.body.image, 'base64');
+            const query = 'INSERT INTO img_store (key, image) VALUES (?, ?)';
+            client.execute(query, [data.id, req.body.image], { prepare: true }, function (err, result) {
                 assert.ifError(err);
                 res.send(data);
             });
@@ -71,7 +72,7 @@ exports.findAll = (req, res) => {
 
 // Retrieve and return all items from the database.
 exports.findAllImages = (req, res) => {
-    const query = 'SELECT image FROM image_store';
+    const query = 'SELECT image FROM img_store';
     client.execute(query, [], { prepare: true }, function (err, images) {
         assert.ifError(err);
         res.send(images);
@@ -85,7 +86,8 @@ exports.put = (req, res) => {
     Item.findByIdAndUpdate(req.params.itemID, {
         type: req.body.type,
         color: req.body.color,
-        season: req.body.season
+        season: req.body.season,
+        store: req.body.store
     }, { new: true })  //returns modified doc 
         .then(item => {
             if (!item) {
@@ -117,11 +119,11 @@ exports.findOneImage = (req, res) => {
                     message: "Item not found with id " + req.params.itemID
                 });
             }
-            const query = 'SELECT image FROM image_store WHERE key = ?';
+            const query = 'SELECT image FROM img_store WHERE key = ?';
             // Set the prepare flag in your queryOptions
             client.execute(query, [String(item._id)], { prepare: true }, function (err, image) {
                 assert.ifError(err);
-                res.send(image);
+                res.send(image.rows[0].image);
             });
 
 
@@ -171,7 +173,7 @@ exports.delete = (req, res) => {
                 });
             }
 
-            const query = "DELETE FROM image_store WHERE key= ? ";
+            const query = "DELETE FROM img_store WHERE key= ? ";
             client.execute(query, [req.params.itemID], { prepare: true }, function (err, result) {
                 assert.ifError(err);
                 res.send({ message: "Item deleted successfully" });
@@ -195,7 +197,8 @@ exports.findWithCondition = (req, res) => {
         $or: [
             { type: req.body.type },
             { color: req.body.color },
-            { season: req.body.season }
+            { season: req.body.season },
+            {store: req.body.store}
 
         ]
     })
@@ -238,6 +241,18 @@ exports.findTypes = (req, res) => {
 // Retrieve and return all colors
 exports.findSeasons = (req, res) => {
     Item.find().distinct("season")
+        .then(item => {
+            res.send(item);
+        }).catch(err => {
+            res.status(500).send({
+                message: err.message || "Some error occurred while retrieving items."
+            });
+        });
+};
+
+// Retrieve and return all stores
+exports.findStores = (req, res) => {
+    Item.find().distinct("store")
         .then(item => {
             res.send(item);
         }).catch(err => {
