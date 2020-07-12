@@ -3,6 +3,7 @@ var assert = require('assert');
 
 // Create and Save user
 exports.create = (req, res) => {
+    res.set('Access-Control-Allow-Origin', '*');
     // Create user
     const user = new User({
         user: req.body.user,
@@ -29,7 +30,7 @@ exports.create = (req, res) => {
 
 // Find a single user with a userID
 exports.findOne = (req, res) => {
-
+    res.set('Access-Control-Allow-Origin', '*');
     User.findById(req.params.userID)
         .then(user => {
             if (!user) {
@@ -52,6 +53,7 @@ exports.findOne = (req, res) => {
 
 // Delete user with the specified userID in the request
 exports.delete = (req, res) => {
+    res.set('Access-Control-Allow-Origin', '*');
 
     User.findByIdAndRemove(req.params.userID)
         .then(user => {
@@ -77,6 +79,7 @@ exports.delete = (req, res) => {
 
 // Update user
 exports.put = (req, res) => {
+    res.set('Access-Control-Allow-Origin', '*');
     // Find user and update it with the request body
     User.findByIdAndUpdate(req.params.userID, {
         user: req.body.user,
@@ -104,6 +107,7 @@ exports.put = (req, res) => {
 
 // Retrieve and return all users from the database.
 exports.findAll = (req, res) => {
+    res.set('Access-Control-Allow-Origin', '*');
     User.find()
         .then(user => {
             res.send(user);

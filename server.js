@@ -7,9 +7,9 @@ var csp = require('helmet-csp');
 
 const app = express();
 
-app.use(bodyParser.urlencoded({ extended: true }))
-
-app.use(bodyParser.json())
+app.use(bodyParser({ limit: '50mb' }));
+app.use(bodyParser.urlencoded({limit: '50mb'}));
+app.use(bodyParser.json());
 
 app.use(cors({
     origin: 'http://localhost:3001'
@@ -63,8 +63,8 @@ mongoose.connect(dbConfig.urlMongo, {
 }).then(() => {
     console.log("Successfully connected to the database");
     // listen for requests
-    app.listen(3000, () => {
-        console.log("Server is listening on port 3000");
+    app.listen(3001, () => {
+        console.log("Server is listening on port 3001");
     });
 
 }).catch(err => {

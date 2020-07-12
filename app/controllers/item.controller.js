@@ -13,6 +13,7 @@ client.connect(function (err) {
 // Create and Save item
 exports.create = (req, res) => {
     // Create item
+    res.set('Access-Control-Allow-Origin', '*');
     const item = new Item({
         type: req.body.type,
         color: req.body.color,
@@ -60,6 +61,7 @@ exports.create = (req, res) => {
 
 // Retrieve and return all items from the database.
 exports.findAll = (req, res) => {
+    res.set('Access-Control-Allow-Origin', '*');
     Item.find()
         .then(item => {
             res.send(item);
@@ -72,6 +74,7 @@ exports.findAll = (req, res) => {
 
 // Retrieve and return all items from the database.
 exports.findAllImages = (req, res) => {
+    res.set('Access-Control-Allow-Origin', '*');
     const query = 'SELECT image FROM img_store';
     client.execute(query, [], { prepare: true }, function (err, images) {
         assert.ifError(err);
@@ -82,6 +85,7 @@ exports.findAllImages = (req, res) => {
 
 // Update items
 exports.put = (req, res) => {
+    res.set('Access-Control-Allow-Origin', '*');
     // Find item and update it with the request body
     Item.findByIdAndUpdate(req.params.itemID, {
         type: req.body.type,
@@ -111,7 +115,7 @@ exports.put = (req, res) => {
 
 // Find a single item's image with a itemID
 exports.findOneImage = (req, res) => {
-
+    res.set('Access-Control-Allow-Origin', '*');
     Item.findById(req.params.itemID)
         .then(item => {
             if (!item) {
@@ -123,10 +127,15 @@ exports.findOneImage = (req, res) => {
             // Set the prepare flag in your queryOptions
             client.execute(query, [String(item._id)], { prepare: true }, function (err, image) {
                 assert.ifError(err);
-                res.send(image.rows[0].image);
+                if(image.rows.length !=0){
+                res.send(image.rows[0].image);}
+                else{
+                    return res.status(404).send({
+                        message: "Image not found with id " + req.params.itemID
+                    });
+                }
+
             });
-
-
         }).catch(err => {
             if (err.kind === 'ObjectId') {
                 return res.status(404).send({
@@ -141,7 +150,7 @@ exports.findOneImage = (req, res) => {
 
 // Find a single item with a itemID
 exports.findOne = (req, res) => {
-
+    res.set('Access-Control-Allow-Origin', '*');
     Item.findById(req.params.itemID)
         .then(item => {
             if (!item) {
@@ -164,7 +173,7 @@ exports.findOne = (req, res) => {
 
 // Delete item with the specified itemID in the request
 exports.delete = (req, res) => {
-
+    res.set('Access-Control-Allow-Origin', '*');
     Item.findByIdAndRemove(req.params.itemID)
         .then(item => {
             if (!item) {
@@ -193,6 +202,7 @@ exports.delete = (req, res) => {
 
 // Retrieve and return all items from the database.
 exports.findWithCondition = (req, res) => {
+    res.set('Access-Control-Allow-Origin', '*');
     Item.find({
         $or: [
             { type: req.body.type },
@@ -216,6 +226,7 @@ exports.findWithCondition = (req, res) => {
 
 // Retrieve and return all colors
 exports.findColors = (req, res) => {
+    res.set('Access-Control-Allow-Origin', '*');
     Item.find().distinct("color")
         .then(item => {
             res.send(item);
@@ -228,6 +239,7 @@ exports.findColors = (req, res) => {
 
 // Retrieve and return all colors
 exports.findTypes = (req, res) => {
+    res.set('Access-Control-Allow-Origin', '*');
     Item.find().distinct("type")
         .then(item => {
             res.send(item);
@@ -240,6 +252,7 @@ exports.findTypes = (req, res) => {
 
 // Retrieve and return all colors
 exports.findSeasons = (req, res) => {
+    res.set('Access-Control-Allow-Origin', '*');
     Item.find().distinct("season")
         .then(item => {
             res.send(item);
@@ -252,6 +265,7 @@ exports.findSeasons = (req, res) => {
 
 // Retrieve and return all stores
 exports.findStores = (req, res) => {
+    res.set('Access-Control-Allow-Origin', '*');
     Item.find().distinct("store")
         .then(item => {
             res.send(item);
@@ -264,6 +278,7 @@ exports.findStores = (req, res) => {
 
 // Retrieve and return all items from the database ordered by date of creation .
 exports.findItemsByDate = (req, res) => {
+    res.set('Access-Control-Allow-Origin', '*');
     Item.find().sort({createdAt: 'desc'})
         .then(item => {
             res.send(item);
@@ -276,6 +291,7 @@ exports.findItemsByDate = (req, res) => {
 
 // Retrieve and return all items from the database ordered by date of last modification
 exports.findItemsByDateUpdated = (req, res) => {
+    res.set('Access-Control-Allow-Origin', '*');
     Item.find().sort({updatedAt: 'desc'})
         .then(item => {
             res.send(item);

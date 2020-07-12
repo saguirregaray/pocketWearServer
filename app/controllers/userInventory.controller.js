@@ -3,6 +3,7 @@ var assert = require('assert');
 
 // Create and Save user inv
 exports.create = (req, res) => {
+    res.set('Access-Control-Allow-Origin', '*');
     // Create userInventory
     const userInventory = new UserInventory({
         userID: req.body.userID,
@@ -29,6 +30,7 @@ exports.create = (req, res) => {
 
 // Find a single user inv with a userInventoryID
 exports.findOne = (req, res) => {
+    res.set('Access-Control-Allow-Origin', '*');
 
     UserInventory.findById(req.params.userInventoryID)
         .then(userInventory => {
@@ -52,7 +54,7 @@ exports.findOne = (req, res) => {
 
 // Delete userInventory with the specified userID in the request
 exports.delete = (req, res) => {
-
+    res.set('Access-Control-Allow-Origin', '*');
     UserInventory.find({ userID: req.body.userID })
         .then(userInventory => {
             return userInventory
@@ -85,6 +87,7 @@ exports.delete = (req, res) => {
 };
 // Retrieve and return all item from the database linked to a certain user.
 exports.findByUserID = (req, res) => {
+    res.set('Access-Control-Allow-Origin', '*');
     UserInventory.find({ userID: req.body.userID })
         .then(userInventory => {
             res.send(userInventory);
@@ -98,6 +101,7 @@ exports.findByUserID = (req, res) => {
 
 // Update user
 exports.put = (req, res) => {
+    res.set('Access-Control-Allow-Origin', '*');
     UserInventory.find({ userID: req.body.userID })
         .then(userInventory => {
             return userInventory
@@ -137,6 +141,7 @@ exports.put = (req, res) => {
 
 // Retrieve and return all users inventories from the database.
 exports.findAll = (req, res) => {
+    res.set('Access-Control-Allow-Origin', '*');
     UserInventory.find()
         .then(userInventory => {
             res.send(userInventory);

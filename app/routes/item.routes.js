@@ -8,7 +8,6 @@ module.exports = (app) => {
     app.delete('/item/:itemID', item.delete);           //Done
 
     //DATA
-
     //update item data
     app.put('/item/:itemID', item.put);                     //Done
 
@@ -20,8 +19,6 @@ module.exports = (app) => {
 
     // Retrieve items data by filter
     app.get('/item/dataFilters', item.findWithCondition);          //Done
-
-   
 
     //IMAGES  
 
